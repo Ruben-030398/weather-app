@@ -1,0 +1,32 @@
+@import ../../sass/variables
+@import ../../sass/colors
+
+
+.form 
+  width: 70%
+  padding-top: 4rem
+  padding: 5rem
+
+.input
+  font-size: $font-size-p
+  letter-spacing: .2rem
+  font-weight: 400
+  color: $color-black
+  padding: 1rem 0rem 1rem 1rem
+  background: $color-white
+  border: none
+  border-bottom: .2rem solid transparent
+  border-radius: .5rem
+  width: 70%
+  transition-duration: 100ms
+  &:focus
+    outline: none
+    border-bottom: .2rem solid #66D763
+    box-shadow: $box-shadow 
+  &:focus:invalid
+    border-bottom: .2rem solid #D76363
+  &:placeholder-shown + &__label
+    opacity: 0
+    visibility: hidden
+    transform: translateY(-3rem)
+    z-index: -1

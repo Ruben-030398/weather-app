@@ -1,0 +1,24 @@
+@import ../../sass/variables
+@import ../../sass/typography
+@import ../../sass/base
+
+.daily_forecast
+  display: flex
+  flex-wrap: wrap
+  justify-content: flex-start
+  margin: auto
+  align-items: center
+  padding: 2rem
+  gap: 1rem
+  @include respond('tab-land')
+    width: 100%
+    align-items: center
+    justify-content: center
+  &__item
+    display: flex
+    flex-direction: column
+    align-items: center
+    gap: 10px
+    box-shadow: $box-shadow
+    padding: 1rem
+    border-radius: .7rem
