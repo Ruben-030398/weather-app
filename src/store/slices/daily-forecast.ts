@@ -1,29 +1,41 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { ForecastData, TemperatureUnitEnum } from "../../types";
 import axios from "axios";
+import { setSelectedDate } from "./selected-date";
 
-const initialState: { loading: boolean, data: ForecastData | null } = {
+const initialState: { loading: boolean, data: ForecastData | null, error: string } = {
   loading: false,
-  data: null
+  data: null,
+  error: ''
 }
 
 type FetchCurrentWeather = {
-  unit?: TemperatureUnitEnum
+  unit?: TemperatureUnitEnum,
+  city: string
 }
 
 export const fetchDailyForecast = createAsyncThunk(
   'dailyForecast/fetchDailyForecast',
-  async ({ unit }: FetchCurrentWeather = {}, thunkApi) => {
-    thunkApi.dispatch(getDailyForecast());    
+  async ({ unit, city }: FetchCurrentWeather, thunkApi) => {
+    thunkApi.dispatch(getDailyForecast());
 
     navigator.geolocation.getCurrentPosition(async function (position) {
       const latitude = position.coords.latitude;
       const longitude = position.coords.longitude;
-      const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&units=${unit}&lon=${longitude}&cnt=6&appid=9d47825e8b4e7545203d89968372299c`;
+      const apiUrl = `${import.meta.env.VITE_APP_ENDPOINT}?lat=${latitude}&q=${city}&units=${unit}&lon=${longitude}&appid=${import.meta.env.VITE_APP_API_KEY}`;
 
-      const result = await axios.get(apiUrl);
+      try {
 
-      thunkApi.dispatch(setDailyForecast(result.data));
+        const result = await axios.get<ForecastData>(apiUrl);
+
+        thunkApi.dispatch(setSelectedDate(result.data.list[0].dt_txt))
+        thunkApi.dispatch(setDailyForecast(result.data));
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          
+          thunkApi.dispatch(setError(e.message));
+        }
+      }
     });
   }
 )
@@ -33,11 +45,17 @@ const dailyForecast = createSlice({
   initialState: initialState,
   reducers: {
     setDailyForecast: (state, data: PayloadAction<ForecastData>) => {
+      state.error = '';
       state.loading = false;
       state.data = data.payload;
     },
     getDailyForecast: (state) => {
       state.loading = true;
+    },
+    setError: (state, data: PayloadAction<string>) => {
+      state.loading = false;
+      state.data = null;
+      state.error = data.payload;
     }
   },
 })
@@ -45,4 +63,4 @@ const dailyForecast = createSlice({
 
 export const { reducer: dailyForecastReducer, actions } = dailyForecast;
 
-export const { getDailyForecast, setDailyForecast } = actions;
+export const { getDailyForecast, setDailyForecast, setError } = actions;

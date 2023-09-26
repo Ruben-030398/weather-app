@@ -2,10 +2,10 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 
 const selectedDateSlice = createSlice({
   name: 'selectedDate',
-  initialState: Date.now(),
+  initialState: { value: 'l2' },
   reducers: {
-    setSelectedDate: (state, action: PayloadAction<number>) => {
-      state = action.payload
+    setSelectedDate: (state, action: PayloadAction<string>) => {
+      state.value = action.payload
     },
   },
 })

@@ -1,8 +1,8 @@
 import styles from './sass/main.module.sass'
 import Navbar from './components/Navbar/Navbar';
 import CurrentWeather from './features/CurrentWeather/CurrentWeather';
-import WeatherForecasts from './features/WeatherForecasts/WeatherForecasts';
 import DailyForecast from './features/DailyForecast/DailyForecast';
+import HourlyForecasts from './features/HourlyForecasts/HourlyForecasts';
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
       <Navbar />
       <div className={styles.layout}>
         <CurrentWeather />
-        <WeatherForecasts />
+        <HourlyForecasts />
       </div>
       <DailyForecast />
     </div>
