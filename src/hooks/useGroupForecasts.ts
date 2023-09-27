@@ -2,6 +2,7 @@ import { useEffect, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "../store";
 import { fetchDailyForecast } from "../store/slices/daily-forecast";
 import { List } from "../types";
+import { getForecastGroupKey } from "../utils";
 
 export const useGroupedForecasts = () => {
   const dispatch = useAppDispatch();
@@ -11,9 +12,7 @@ export const useGroupedForecasts = () => {
   const city = useAppSelector(state => state.selectedCity);
 
   const groupedForecasts = useMemo(() => dailyForecast?.data?.list ? dailyForecast?.data?.list.reduce<Record<string, Array<List>>>((acc, value) => {
-    const date = new Date(value.dt_txt);
-
-    const key = `${date.getDay()}-${date.getMonth()}`;
+    const key = getForecastGroupKey(value);
 
     if (acc[key]) {
       acc[key].push(value)
